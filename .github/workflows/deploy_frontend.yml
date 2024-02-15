@@ -45,7 +45,7 @@ jobs:
                 port: 22
                 script: |
                     sudo apt-get update
-                    sudo apt install docker
+                    sudo apt-get install -y docker compose
                      cd /home/ubuntu/frontend
                      echo ${{secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{secrets.DOCKER_HUB_USERNAME}} --password-stdin
                      docker compose down
