@@ -35,7 +35,7 @@ jobs:
                 key: ${{ secrets.HOST_SSH_PRIVATE_KEY}}
                 port: 22
                 source: "docker-compose-prod.yml"
-                target: "/home/ubuntu/frontend_newlook"
+                target: "/home/ubuntu/frontend_newlook/docker-compose-prod.yml"
             - name: docker compose
               uses: appleboy/ssh-action@v0.1.10
               with: 
