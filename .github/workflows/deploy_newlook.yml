@@ -35,7 +35,7 @@ jobs:
                 key: ${{ secrets.HOST_SSH_PRIVATE_KEY}}
                 port: 22
                 source: "docker-compose-prod.yml"
-                target: "/home/ubuntu/frontend_newlook/docker-compose-prod.yml"
+                target: "/home/ubuntu/frontendnewlook/docker-compose-prod.yml"
             - name: docker compose
               uses: appleboy/ssh-action@v0.1.10
               with: 
@@ -48,13 +48,13 @@ jobs:
                     sudo apt-get install -y docker
                     sudo apt-get install -y docker-compose
                     sudo usermod -aG docker $USER
-                
-                     cd /home/ubuntu/frontend_newlook
+                     
+                     cd /home/ubuntu/frontendnewlook
                      echo ${{secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{secrets.DOCKER_HUB_USERNAME}} --password-stdin
                      sudo docker-compose down
                      sudo docker-compose pull
                      sudo docker-compose -f docker-compose-prod up -d
-                     rm -rf /home/ubuntu/frontend_newlook
+                     rm -rf /home/ubuntu/frontendnewlook
 
 
 
