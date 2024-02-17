@@ -1,0 +1,63 @@
+name: Deploy newlook
+'on':
+    push:
+        branches:
+            - newlook
+    
+jobs:
+    docker:
+        runs-on: ubuntu-latest
+        steps: 
+            - name: Checkout 
+              uses: actions/checkout@v3
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v2
+            - name: Login to dockerHub
+              uses: docker/login-action@v2
+              with:
+                username: ${{secrets.DOCKER_HUB_USERNAME}}
+                password: ${{secrets.DOCKER_HUB_TOKEN}}
+            - name: prepare the docker-compose run  
+              run: |
+                    ls -l
+
+            - name: Build and push
+              uses: docker/build-push-action@v4
+              with: 
+                context: .
+                push: true
+                tags: 29ayenyeinsan/234-deploylab-frontend:latest
+            - name: copy file via ssh password
+              uses: appleboy/scp-action@v0.1.4
+              with:
+                host: ${{secrets.HOST_SERVER}}
+                username: ${{secrets.HOST_USER_NAME}}
+                key: ${{ secrets.HOST_SSH_PRIVATE_KEY}}
+                port: 22
+                source: "docker-compose-prod.yml"
+                target: "/home/ubuntu/frontend_newlook"
+            - name: docker compose
+              uses: appleboy/ssh-action@v0.1.10
+              with: 
+                host: ${{secrets.HOST_SERVER}}
+                username: ${{secrets.HOST_USER_NAME}}
+                key: ${{secrets.HOST_SSH_PRIVATE_KEY}}
+                port: 22
+                script: |
+                    sudo apt-get update
+                    sudo apt-get install -y docker
+                    sudo apt-get install -y docker-compose
+                    sudo usermod -aG docker $USER
+                
+                     cd /home/ubuntu/frontend
+                     echo ${{secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{secrets.DOCKER_HUB_USERNAME}} --password-stdin
+                     sudo docker-compose down
+                     sudo docker-compose pull
+                     sudo docker-compose -f docker-compose-prod up -d
+                     rm -rf /home/ubuntu/frontend_newlook
+
+
+
+
+
+       
