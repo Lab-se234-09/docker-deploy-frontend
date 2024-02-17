@@ -1,4 +1,4 @@
-name: Deploy frontend application by creating docker image
+name: Deploy frontend main
 'on':
     push:
         branches:
